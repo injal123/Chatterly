@@ -1,0 +1,9 @@
+### Signup endpoint
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "fullName": "zoro",
+  "email": "zoro@gmail.com",
+  "password": "123456"
+}

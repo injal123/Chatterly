@@ -8,7 +8,7 @@ import path from 'path';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 
-
+import { connectDB } from './lib/db.js';
 
 
 
@@ -18,7 +18,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const __dirname = path.resolve();
-// console.log(__dirname);           // /Users/injalthapa/Downloads/Chatterly/backend
+// console.log(__dirname);           //    /Users/injalthapa/Downloads/Chatterly/backend
+
+
+// middleware
+app.use(express.json());    // under req.body we can access json data
 
 
 // Endpoints
@@ -42,4 +46,5 @@ app.use('*', (_, res) => {
 
 app.listen(PORT, () => {
     console.log("Server is running on Port:", PORT);
+    connectDB();
 })
