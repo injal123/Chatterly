@@ -47,4 +47,23 @@ app.use('*', (_, res) => {
 app.listen(PORT, () => {
     console.log("Server is running on Port:", PORT);
     connectDB();
-})
+});
+
+
+
+
+// // Server only starts if DB is ready.
+
+// const startServer = async () => {
+//   try {
+//     await connectDB(); // wait for DB connection.
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on Port: ${PORT}`);
+//     });
+//   } catch (error) {
+//     console.error("Failed to start server:", error);
+//     process.exit(1); // exit because DB is required before starting the server.
+//   }
+// };
+
+// startServer();
