@@ -10,3 +10,20 @@ export const ENV = {
     EMAIL_FROM: process.env.EMAIL_FROM,
     CLIENT_URL: process.env.CLIENT_URL
 };
+
+
+if (!ENV.MONGO_URI) {
+    console.warn("Warning: MONGO_URI is not defined in environment variables.");
+}
+
+if (!ENV.JWT_SECRET) {
+    console.warn("Warning: JWT_SECRET is not defined in environment variables.");
+}
+
+if (!ENV.RESEND_API_KEY) {
+    console.warn("Warning: RESEND_API_KEY is not defined in environment variables.");
+}
+
+if (!ENV.CLIENT_URL) {
+    console.warn("Warning: CLIENT_URL is not defined in environment variables.");
+}
