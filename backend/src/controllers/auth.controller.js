@@ -89,3 +89,68 @@ export const signup = async (req, res) => {
     }
 
 };
+
+
+
+
+
+export const login = async (req, res) => {
+    
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
+
+        const user = await User.findOne({ email:email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+        } // never tell the user which one is wrong: email or password.
+
+
+
+        // console.log("Password from body:", password);
+        // console.log("Password from DB:", user.password);
+
+
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+
+        if (!isPasswordMatch) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+        }
+
+        // generate token and send cookie.
+        generateToken(user._id, res);
+
+        res.status(200).json({   // 200 SUCCESS
+            _id: user._id,
+            email: user.email,
+            fullName: user.fullName,
+            profilePic: user.profilePic,
+            message: "Login Successful"
+        });
+        
+    } catch (error) {
+        console.error("Error in auth-login controller:", error);
+        res.status(500).json({ message: "Internal Server Error. Please try again later." });   
+    }
+};
+
+
+
+
+
+export const logout = (_, res) => {
+    res.cookie("jwt", "",                       // "" :no new value means clears the cookie.
+        {maxAge: 0,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // only HTTPS in production
+        sameSite: "strict"
+        }
+    );
+
+    res.status(200).json({ message: "Logged out successfully" });
+}
