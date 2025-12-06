@@ -24,3 +24,9 @@ Content-type: application/json
 ### Logout endpoint
 POST http://localhost:3000/api/auth/logout
 Content-type: application/json
+
+
+
+### testAuth endpoint -- do login-testAuth-Then do-logout-testAuth & see if protectRoute works.
+GET http://localhost:3000/api/auth/testAuth
+Content-type: application/json

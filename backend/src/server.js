@@ -8,7 +8,7 @@ import messageRoutes from './routes/message.route.js';
 import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
 
-
+import cookieParser from 'cookie-parser';
 
 
 const app = express(); 
@@ -20,6 +20,7 @@ const __dirname = path.resolve();
 
 // middleware
 app.use(express.json());    // under req.body we can access json data
+app.use(cookieParser());  // to parse cookies from request headers..to be used in auth.middleware.js
 
 
 // Endpoints
