@@ -3,22 +3,27 @@ import { isSpoofedBot } from "@arcjet/inspect";
 
 
 
-export const arcjetProtection = async (req, resizeBy, next) => {
+export const arcjetProtection = async (req, res, next) => {
     try {
         const decision = await aj.protect(req);
 
         if(decision.isDenied()) {
             if (decision.reason.isRateLimit()) {
-                return resizeBy.status(429).json({ message: "Too many requests — the rate limit has been exceeded. Please try again later." });
+                return res.status(429).json({ message: "Too many requests — the rate limit has been exceeded. Please try again later." });
             }
 
-            if(decision.reason.isBot()) {
-                return resizeBy.status(403).json({ message: "Bot access denied." });
+            else if(decision.reason.isBot()) {
+                return res.status(403).json({ message: "Bot access denied." });
             }
+
+            else {
+                return res.status(403).json({ message: "Access denied by security policy.", reason: decision.reason.toString() });
+            }
+
         }
 
         if (decision.results.some(isSpoofedBot)) {
-            return resizeBy.status(403).json({ 
+            return res.status(403).json({ 
                 error: "Spoofed bot detected",
                 message: "Malicious bot activity detected. Request denied." });
         }
