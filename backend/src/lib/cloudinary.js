@@ -2,6 +2,10 @@ import { v2 as cloudinary } from 'cloudinary';
 import { ENV } from './env.js';
 
 
+if (!ENV.CLOUDINARY_CLOUD_NAME || !ENV.CLOUDINARY_API_KEY || !ENV.CLOUDINARY_API_SECRET) {
+    console.warn("Cloudinary environment variable missing. Image uploads may fail.");
+}
+
 
 // Configuration
 cloudinary.config({ 

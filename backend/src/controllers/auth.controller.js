@@ -166,19 +166,41 @@ export const logout = (_, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { profilePic } = req.body;
-        if(!profilePic) return res.status(400).json({ message: "Profile picture is required." });
 
-        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+        if(!profilePic) return res.status(400).json({ message: "Profile picture is required." });
+        if(typeof profilePic !== 'string') return res.status(400).json({ message: "Invalid profile picture format." });
+
+        // size limit for Base64 images.
+        if (profilePic.length > 5_000_000) {    // ~5MB Base64 string
+            return res.status(413).json({ message: "Image too large." });
+        }
+
+
+        // Upload image to Cloudinary.
+        const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+            folder: 'Chatterly/profile_pics',
+            resource_type: 'image',
+            overwrite: true,   // replace old image instead of creating a duplicate for same img.
+            invalidate: true,  // forces CDN to fetch new img, so users immediately see the updated profile pic everywhere.
+            transformation: [
+                { width: 500, height: 500, crop: "limit" }  // limit to 500x500
+            ]
+        });
 
         // Update user's profilePic URL in DB.
         const userId = req.user._id;
         const updatedUser = await User.findByIdAndUpdate(
-                                            userId, 
-                                            { profilePic: uploadResponse.secure_url }, 
-                                            { new:true } 
-                                        );
+                                        userId, 
+                                        { profilePic: uploadResponse.secure_url }, 
+                                        { new:true, runValidators: true, select: "-password" }  // exclude pw field.
+                                    );
         
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
         res.status(200).json(updatedUser);
+
 
     } catch (error) {
         console.error("Error in auth-updateProfile controller:", error);
