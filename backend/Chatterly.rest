@@ -30,3 +30,28 @@ Content-type: application/json
 ### testAuth endpoint -- do login-testAuth-Then do-logout-testAuth & see if protectRoute works.
 GET http://localhost:3000/api/auth/testAuth
 Content-type: application/json
+
+
+
+
+
+
+
+
+### getAllContacts endpoint
+GET  http://localhost:3000/api/messages/contacts
+
+
+### sendMessage endpoint
+POST http://localhost:3000/api/messages/send/69345f10b289a44cb4d737db
+Content-Type: application/json
+
+{
+  "text": "Hii luffy"
+}
+
+
+
+### getAllChattedPartners endpoint for 
+# res.status(200).send(messages); only
+GET http://localhost:3000/api/messages/chats
