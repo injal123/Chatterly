@@ -1,13 +1,18 @@
 // rfce
 
 
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 
 import { useAuthStore } from './store/useAuthStore';
+import { useEffect } from 'react';
+
+import PageLoader from './components/PageLoader';
+
+import { Toaster } from 'react-hot-toast';
 
 
 
@@ -15,32 +20,61 @@ import { useAuthStore } from './store/useAuthStore';
 
 function App() {
 
-    const { authUser, isLoggedIn, isStudying, login } = useAuthStore();
-    console.log("authUser:", authUser);
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("isStudying:", isStudying);
+  const { authUserInfo, isCheckingAuth, checkAuth } = useAuthStore();
 
+  // useEffect Hooks - Run this code after the component renders, only then run this backend work...avoids page freezing, u know.
+  useEffect( () => {
+      checkAuth();
+  }, [checkAuth] )     // If checkAuth changes → useEffect re-runs.....btw [] only → means run once.
 
+  // console.log({ authUserInfo });
+
+  if (isCheckingAuth) return <PageLoader />;
  
+
   return (
+    // centers the index & login & signup page's outermost main div.
     <div className='bg-slate-900 min-h-screen relative flex items-center justify-center p-4 overflow-hidden'>
 
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f2c] via-[#1a1a3f] to-[#0c0c2a]" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:12px_12px]" />
-              <div className="absolute top-0 -left-16 w-96 h-96 bg-purple-800/30 blur-[120px] rounded-full" />
-              <div className="absolute bottom-0 -right-16 w-96 h-96 bg-blue-600/30 blur-[120px] rounded-full" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(20,150,255,0.1),transparent_80%)] blur-[80px]" />
+<div className="absolute bottom-0 right-0 w-[420px] h-[420px] bg-blue-600/30 blur-[140px] rounded-full pointer-events-none" />
+<div className="absolute bottom-24 right-24 w-64 h-64 bg-cyan-400/20 blur-[100px] rounded-full pointer-events-none" />
 
-      <button className='z-10' onClick={login}>loginn</button>
+<div className="absolute inset-0 
+  bg-[radial-gradient(circle,rgba(255,255,255,0.05)_1px,transparent_1px)]
+  bg-[size:12px_12px]
+  pointer-events-none
+" />
 
-      <Routes>
-        <Route path="/" element={ <ChatPage /> } />
-        <Route path="/login" element={ <LoginPage /> } />
-        <Route path="/signup" element={ <SignUpPage /> } />
-      </Routes>
+
+
+
+        <Routes>
+          <Route path="/" element={ authUserInfo ? <ChatPage /> : <Navigate to={"/login"} /> } />
+          <Route path="/login" element={ !authUserInfo ? <LoginPage /> : <Navigate to="/" /> } />
+          <Route path="/signup" element={ !authUserInfo ? <SignUpPage /> : <Navigate to="/" /> } />
+        </Routes>
+
+        <Toaster />
     
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+// 1. App renders,
+// 2. isCheckingAuth === true → PageLoader renders,
+// 3. useEffect runs after render,
+// 4. checkAuth() is called,
+// 5. checkAuth updates state,
+// 6. isCheckingAuth becomes false,
+// 7. App re-renders → Routes shown.

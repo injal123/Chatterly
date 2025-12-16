@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
         }
 
         // check if email is in valid format using regex.
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(trimmedEmail)) {
             return res.status(400).json({ message: "Invalid email format." });
         }
