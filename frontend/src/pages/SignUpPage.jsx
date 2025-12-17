@@ -108,7 +108,7 @@ function SignUpPage() {
 
                 {/* Redirect to Login page if already have an account */}
                 <div className='mt-8 text-center'>
-                  <Link to="/login" className='redirect-to-login-link'>
+                  <Link to="/login" className='redirect-to-login-signup-link'>
                       Already have an account? Login
                   </Link>
                 </div>
