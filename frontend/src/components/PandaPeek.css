@@ -1,0 +1,144 @@
+/* --- PandaPeek.css --- */
+
+/* EARS */
+.ear {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: black;
+  border: solid 2px black;
+  border-radius: 50%;
+  top: -6px;
+  z-index: -1;
+}
+.ear.left { left: 6px; }
+.ear.right { right: 6px; }
+
+/* EYE PATCH */
+.eye-patch {
+  position: absolute;
+  width: 30px;
+  height: 34px;
+  background: black;
+  border-radius: 50%;
+  top: 28px;
+}
+.eye-patch.left { left: 14px; }
+.eye-patch.right { right: 14px; }
+
+/* EYES */
+.eye {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 11px;
+  left: 9px;
+  overflow: hidden;
+}
+.pupil {
+  width: 7px;
+  height: 6px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: -1px;
+  transform: translate(2px,2px);
+}
+
+/* BLINK */
+.eye::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: black;
+  transform: scaleY(0);
+  transform-origin: center;
+  animation: blink 1.4s infinite;
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(0); }
+  91%, 93% { transform: scaleY(1); }
+}
+
+/* NOSE & MOUTH */
+.nose {
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  background: black;
+  border-radius: 50%;
+  left: 49%;
+  bottom: 36px;
+  transform: translateX(-50%);
+}
+.mouth {
+  position: absolute;
+  bottom: 23px;
+  left: 49%;
+  width: 4px;
+  height: 8px;
+  background: #333;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+/* HANDS */
+.hand {
+  position: absolute;
+  width: 18px;
+  height: 14px;
+  background: black;
+  border-radius: 45%;
+  bottom: 17px;
+  display: none;
+}
+.hand.left { left: -5px; }
+.hand.right { right: 10px; }
+
+.character.peeking .hand {
+  display: block;
+}
+
+
+
+
+/* --- Panda head --- */
+.character {
+  position: absolute;
+  left: 50%;          
+  width: 100px;
+  height: 100px;
+  background: #fff;
+  border-radius: 50%;
+  z-index: 1;         
+  transition: transform 0.35s ease;
+}
+
+
+
+
+
+/* --- MOBILE (iPhone) --- */
+@media (max-width: 767px) {
+  .character {
+    top: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  .character.peeking {
+    transform: translateX(-50%) translateY(-80px);
+  }
+}
+
+/* --- TABLET (iPad) and LAPTOP/DESKTOP --- */
+@media (min-width: 768px) {
+  .character {
+    top: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  .character.peeking {
+    transform: translateX(-50%) translateY(-80px);
+  }
+}
