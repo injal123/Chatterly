@@ -19,10 +19,11 @@ export const sendWelcomeEmail = async (email, name, clientURL) => {
     html: createWelcomeEmailTemplate(name, clientURL),
   });
 
-  if (error) {
-    console.error("Error sending welcome email:", error);
-    throw new Error("Failed to send welcome email");
+  if (error) {   // This format of error object has more understandable details.
+    console.error("RESEND FULL ERROR:", JSON.stringify(error, null, 2)); // 2-space indentation.
+    throw error;
   }
+
 
   console.log("Welcome Email sent successfully", data);
 };

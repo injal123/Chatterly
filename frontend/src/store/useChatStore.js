@@ -33,6 +33,7 @@ export const useChatStore = create( (set, get) => ({
     // localStorage is used so the user's sound setting persists upon page reloads.
     // From localStorage, gets string as "true" and JSON.parse converts to boolean as true.
     // we compare with === true, to ensure the null or undefined becomes false.
+    // btw, its null when user opens the app for the first time cz localStorage is empty.
     isSoundEnabled: JSON.parse( localStorage.getItem("enableSound") )  === true,
 
     toggleSound: () => {

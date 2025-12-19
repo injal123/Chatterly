@@ -170,6 +170,13 @@ export const updateProfile = async (req, res) => {
         if(!profilePic) return res.status(400).json({ message: "Profile picture is required." });
         if(typeof profilePic !== 'string') return res.status(400).json({ message: "Invalid profile picture format." });
 
+        // Frontend checks can be bypassed with Postman & cURL, so check this on both frontend & backend.
+        // E.g. avoids uploading renamed virus.exe → virus.png file.
+        if (!profilePic.startsWith("data:image/")) {
+            return res.status(400).json({ message: "Only image files are allowed." });
+        }
+
+
         // size limit for Base64 images.
         if (profilePic.length > 5_000_000) {    // ~5MB Base64 string
             return res.status(413).json({ message: "Image too large." });
@@ -179,6 +186,8 @@ export const updateProfile = async (req, res) => {
         // Upload image to Cloudinary.
         const uploadResponse = await cloudinary.uploader.upload(profilePic, {
             folder: 'Chatterly/profile_pics',
+            public_id: `user_${req.user._id}`, // For one user, only one pfp's stored in cloudinary.
+                                               // & New upload overwrites old one.
             resource_type: 'image',
             overwrite: true,   // replace old image instead of creating a duplicate for same img.
             invalidate: true,  // forces CDN to fetch new img, so users immediately see the updated profile pic everywhere.

@@ -15,7 +15,7 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.post('/logout', logout);
 
-router.post('/updateProfile', protectRoute, updateProfile);
+router.put('/updateProfile', protectRoute, updateProfile);
 
 
 // check if the user is authenticated to access protected routes...usually when page is refreshed.

@@ -13,11 +13,11 @@ export const useAuthStore = create( (set) => ({       // set, get.
     checkAuth: async () => {
         try {
             const res = await axiosInstance.get("/auth/testAuth");      // from auth.route.js line 22.
-            set({ authUserInfo: res.data })
+            set({ authUserInfo: res.data.user })   // options - user & message.
         } 
         catch (error) {
             console.log("Error in Auth Check:", error);
-            set({ authUserInfo: null })
+            set({ authUserInfo: null })    // If user not logged in or session expired.
         }
         finally {
             set({ isCheckingAuth: false })  // do it after both success & failed case.
@@ -89,6 +89,30 @@ export const useAuthStore = create( (set) => ({       // set, get.
             console.log("Logout error:", error);
         }                                           
 
+    },
+
+
+
+    // Update Profile function - PUT
+    isUpdatingProfile: false,
+
+    updateProfile: async(data) => {
+        set({ isUpdatingProfile: true });
+
+        try {
+            const res = await axiosInstance.put("/auth/updateProfile", data);
+            set({ authUserInfo: res.data });
+
+            toast.success("Profile updated successfully!");
+        } 
+        catch (error) {
+            // dont set authUserInfo to null here, cz its only profile update failed, not the auth..Else, it will log out the user just on failed profile update lol...cz uk in App.jsx .
+            toast.error(error?.response?.data?.message || "Error in updating profile");
+            console.error("Error in updateProfile:", error);
+        }
+        finally {
+            set({ isUpdatingProfile: false });
+        }
     }
 
 }) )
