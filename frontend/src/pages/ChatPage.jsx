@@ -35,7 +35,7 @@ function ChatPage() {
 
 
             {/* RIGHT SIDE */}
-            <div className='flex-1 bg-slate-900/50 flex flex-col backdrop-blur-sm'>
+            <div className='flex-1 bg-slate-900/50 flex flex-col '>
                   { selectedUser ? <ChatContainer /> : <DefaultContainer /> }
             </div>
 
