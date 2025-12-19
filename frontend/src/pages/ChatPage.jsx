@@ -4,8 +4,8 @@ import { useChatStore } from '../store/useChatStore';
 
 import ProfileHeader from '../components/ChatPage-components/ProfileHeader';
 import TabSwitch from '../components/ChatPage-components/TabSwitch';
-import ChatPartnerList from '../components/ChatPage-components/ChatPartnerList';
-import ContactList from '../components/ChatPage-components/ContactList';
+import ChatPartnerList from '../components/ChatPage-components/UsersList-components/ChatPartnerList';
+import ContactList from '../components/ChatPage-components/UsersList-components/ContactList';
 import ChatContainer from '../components/ChatPage-components/ChatContainer';
 import DefaultContainer from '../components/ChatPage-components/DefaultContainer';
 
