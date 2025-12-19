@@ -20,9 +20,17 @@ const __dirname = path.resolve();
 
 
 // middleware
-app.use(express.json());    // under req.body we can access json data
+
+// app.use(express.json());   // under req.body we can access json data
 app.use(cors({ origin: ENV.CLIENT_URL, credentials:true })); // allow frontend, send cookie to backend.
 app.use(cookieParser());  // to parse cookies from request headers..to be used in auth.middleware.js
+
+// the default limit of express.json() is only 100kb. So we use limit option here bcz it said payload size too large.
+// Backend can receive JSON (including Base64 images) and URL-encoded data up to 5 MB.
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
+
+
 
 
 // Endpoints
