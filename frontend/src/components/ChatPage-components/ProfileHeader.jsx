@@ -121,13 +121,16 @@ function ProfileHeader() {
 
         {/* RIGHT SIDE - logout & Sound button */}
         <div className="flex gap-4 items-center">
-              <button onClick={logout} className="text-slate-400 hover:text-slate-200" >
-                    <LogOut className="size-5" />
+              <button 
+                  data-tip="LogOut"
+                  onClick={logout} className="tooltip text-slate-400 hover:text-slate-200" >
+                      <LogOut className="size-5" />
               </button>
 
 
-              <button 
-                  className="text-slate-400 hover:text-slate-200"
+              <button
+                  data-tip={ isSoundEnabled ? "Mute Sound" : "Unmute Sound" }
+                  className="tooltip text-slate-400 hover:text-slate-200"
                   onClick={ () => {
                       mouseClickSound.currentTime = 0;  // reset to start.
                       mouseClickSound.play()
