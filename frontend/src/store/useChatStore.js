@@ -79,6 +79,26 @@ export const useChatStore = create( (set, get) => ({
         finally {
             set({ isLoadingUsers: false })
         }
+    },
+
+
+
+    // get all messages between logged-in user and selected chat partner.
+    getMessagesByUserId: async (userId) => {
+        set({ isLoadingMessages: true });
+
+        try {
+            const res = await axiosInstance.get(`/messages/${userId}`);
+            set({ messages: res.data });
+        } 
+        catch (error) {
+            toast.error(error?.response?.data?.message || "Something went wrong");
+            set({ messages: [] });
+            console.error("Error in getMessagesByUserId:", error);
+        }
+        finally {
+            set({ isLoadingMessages: false });
+        }
     }
 
 
