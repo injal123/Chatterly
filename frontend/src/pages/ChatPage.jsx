@@ -6,8 +6,9 @@ import ProfileHeader from '../components/ChatPage-components/ProfileHeader';
 import TabSwitch from '../components/ChatPage-components/TabSwitch';
 import ChatPartnerList from '../components/ChatPage-components/UsersList-components/ChatPartnerList';
 import ContactList from '../components/ChatPage-components/UsersList-components/ContactList';
-import ChatContainer from '../components/ChatPage-components/ChatContainer';
-import DefaultContainer from '../components/ChatPage-components/DefaultContainer';
+
+import ChattingSide from '../components/ChatPage-components/ChattingSide';
+import ChattingSideDefault from '../components/ChatPage-components/ChattingSideDefault';
 
 
 
@@ -36,7 +37,7 @@ function ChatPage() {
 
             {/* RIGHT SIDE */}
             <div className='flex-1 bg-slate-900/50 flex flex-col '>
-                  { selectedUser ? <ChatContainer /> : <DefaultContainer /> }
+                  { selectedUser ? <ChattingSide /> : <ChattingSideDefault /> }
             </div>
 
         </AnimatedBorderContainer>

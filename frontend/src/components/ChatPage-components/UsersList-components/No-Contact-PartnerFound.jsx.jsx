@@ -1,4 +1,4 @@
-import { MessageCircleIcon, MessageSquareOff } from "lucide-react";
+import { MessageSquareOff } from "lucide-react";
 import { useChatStore } from "../../../store/useChatStore";
 
 
@@ -13,22 +13,34 @@ export function NoChatPartnersFound() {
 
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center space-y-6">
+    <div className="flex flex-col items-center justify-center h-full text-center py-16 bg-slate-700 rounded-xl space-y-6">
         
         {/* Animated gradient circle with icon */}
-        <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-500/20 via-purple-500/20 to-pink-500/20 flex items-center justify-center animate-pulse">
-          <div className="absolute inset-0 rounded-full blur-xl bg-gradient-to-tr from-cyan-500 via-purple-500 to-pink-500 opacity-40 animate-animate-spin-slow"></div>
-          <MessageCircleIcon className="w-10 h-10 text-cyan-400 relative z-10" />
+        <div className="relative w-28 h-28 rounded-full bg-gradient-to-tr flex items-center justify-center animate-pulse">
+          {/* Glowing background */}
+          <div className="absolute inset-0 rounded-full blur-2xl bg-gradient-to-tr from-sky-300 to-sky-400  opacity-40 animate-animate-spin-slow"></div>
+
+          {/* Icon inside */}
+          <MessageSquareOff className="w-16 h-16 text-cyan-400 relative z-10" />
         </div>
+
+
 
         {/* Text */}
         <div>
-          <h4 className="text-slate-200 font-semibold text-lg mb-2">
-            No conversations yet
+
+          <h4 className="text-slate-200 font-semibold text-3xl mb-2">
+            No chats yet?
           </h4>
+
+          <h4 className="text-slate-200 font-semibold text-md mb-2">
+            Let’s get the conversation started!
+          </h4>
+
           <p className="text-slate-400 text-sm max-w-xs mx-auto px-2">
-            Start a new chat by selecting a contact from your contacts tab.
+            Select a contact from your Contacts tab to begin a conversation.
           </p>
+
         </div>
 
         {/* Button */}
