@@ -108,7 +108,7 @@ function ChattingSide() {
 
                           </div>
 
-
+                          {/* socket.io */}
                           {/* STATUS - sent/delivered */}
                           <div className="chat-footer opacity-50">Delivered</div>
 
