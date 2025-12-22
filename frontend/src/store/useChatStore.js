@@ -113,7 +113,7 @@ export const useChatStore = create( (set, get) => ({
         const { selectedUser, messages } = get();  // messages: [m1, m2].
         
         if (!selectedUser) {
-            toast.error("Select a user first.");
+            toast.error("Select a user first!!");
             return;
         }
 
@@ -123,6 +123,8 @@ export const useChatStore = create( (set, get) => ({
 
         // 2..... MOCKING res - FOR BOTH IMAGE & TEXT...to temporarily append "the msg user just sent" to "messages" array. This makes new image & text appear in the UI faster...before even getting res from server which permanently appends "messages" array with the user msg received from server.
         const { authUserInfo } = useAuthStore.getState();
+
+        if (!authUserInfo) return;
 
         const tempId = `temp-${Date.now()}`  // fake msg-Id mock.
 
