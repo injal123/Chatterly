@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 
@@ -15,13 +15,23 @@ function ChattingSide() {
   // once selectedUser is set from sidebar, ChattingSide is rendered, then useEffect will call getMessagesByUserId function, fills messages array.
   const { selectedUser, getMessagesByUserId, messages, isLoadingMessages } = useChatStore();
   const { authUserInfo } = useAuthStore();
+  const messageEndRef = useRef(null);
 
-  console.log(messages);
+  // console.log(messages);
 
 
   useEffect( () => {
       getMessagesByUserId(selectedUser._id);
   }, [getMessagesByUserId, selectedUser] )   // when selectedUser changes, run this effect again.
+
+
+
+  useEffect( () => {
+      if (messageEndRef.current) {
+          messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+  }, [messages]);
+
 
 
 
@@ -77,8 +87,8 @@ function ChattingSide() {
                           </div>
 
 
-                          {/* Message div - Image/Text */}
-                          <div className={`chat-bubble 
+                          {/* Message div - Image, Text & Time. */}
+                          <div className={`chat-bubble p-[4.1px] rounded-s-xl
                             ${
                               msg.senderId === authUserInfo._id
                                 ? "bg-sky-700 text-white chat-bubble-end" // sender
@@ -94,10 +104,10 @@ function ChattingSide() {
                                 )}
 
                                 {/* Text */}
-                                { msg.text && <p>{msg.text}</p> }
+                                { msg.text && <p className="px-3 pt-1">{msg.text}</p> }
 
                                 {/* Time when msg was sent. */}
-                                <p className="text-xs opacity-50"> 
+                                <p className="text-xs opacity-50 mt-1 ml-1"> 
                                     <time>
                                         {new Date(msg.createdAt).toLocaleTimeString([], {
                                           hour: "2-digit",
@@ -115,6 +125,9 @@ function ChattingSide() {
                     </div>
                 ) ) }
 
+
+                {/* AUTO-SCROLLING TO BOTTOM */}
+                <div ref={messageEndRef} />        
             </div>
           ) 
 

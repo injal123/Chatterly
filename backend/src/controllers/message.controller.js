@@ -70,10 +70,30 @@ export const sendMessage = async (req, res) => {
             return res.status(404).json({ message: "Receiver not found." });
         }
 
+
+
+// If User 5 sends an image to User 12, and then User 12 sends another to 5:
+// If User 2 sends an image to User 5, and then User 5 sends another to 2:
+
+// Chatterly/
+//   imageMessage/
+//              5_12/       ← conversation between user 5 and user 12
+//                  sender_5__1766169246000.jpg
+//                  sender_12__1766169302000.jpg
+//              2_5/        ← conversation between user 2 and user 5
+//                  sender_2__1766169400000.jpg
+//                  sender_5__1766169456900.jpg
+
+
+
         let imageUrl;
         if (image) {
-            const uploadResponse = await cloudinary.uploader.upload(image,
-                { folder: 'Chatterly/imageMessage' }
+            const conversationId = [senderId.toString(), receiverId.toString()].sort().join("_");
+            const uploadResponse = await cloudinary.uploader.upload(image, {
+                                    folder: `Chatterly/imageMessage/${conversationId}`,
+                                    public_id: `sender_${senderId}__${Date.now()}`,
+                                    overwrite: false
+                                }
             );
             imageUrl = uploadResponse.secure_url;
         }

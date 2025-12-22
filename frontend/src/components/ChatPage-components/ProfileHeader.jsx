@@ -52,6 +52,8 @@ function ProfileHeader() {
         const base64Image = reader.result;       // reader.result contains the base64 string (URL).
         setSelectedImageFile(base64Image);       //  Store it in state to show a preview.
         await updateProfile({ profilePic: base64Image }); // Send it to backend for upload in cloudinary & MongoDB.
+
+        if (fileInputRef.current) fileInputRef.current.value = ""; // clears URL in <input file tag.
       };
   };
 
