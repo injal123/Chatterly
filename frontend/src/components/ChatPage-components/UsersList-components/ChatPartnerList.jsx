@@ -3,12 +3,14 @@ import { useChatStore } from "../../../store/useChatStore";
 import LoadingUsers from "./LoadingUsers";
 
 import { NoChatPartnersFound } from "./No-Contact-PartnerFound.jsx.jsx";
+import { useAuthStore } from '../../../store/useAuthStore.js';
 
 
 
 function ChatPartnerList() {
 
   const { getAllChattedPartners, isLoadingUsers, chatPartners, setSelectedUser } = useChatStore();
+  const { onlineUsers } = useAuthStore();  // FOR ONLINE/OFFLINE STATUS.
 
   // console.log(chatPartners);
 
@@ -36,7 +38,7 @@ function ChatPartnerList() {
           <div className='flex items-center gap-3'>
               {/* User Avatar */}
               {/* socket.io - STATUS */}
-              <div className={`avatar online`}>
+              <div className={`avatar ${ onlineUsers.includes(partner._id) ? "online" : "offline" }`}>
                   <div className='size-12 rounded-full'>
                       <img 
                         src={partner.profilePic || "avatar.png"} 

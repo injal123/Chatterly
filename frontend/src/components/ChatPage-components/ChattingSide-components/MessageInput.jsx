@@ -105,14 +105,29 @@ function MessageInput() {
           className="max-w-3xl mx-auto space-x-4 flex"
         >
             {/* TEXT INPUT FIELD */}
-            <input type="text"
+            <textarea type="text"
+            rows={1}
               value={text}
               onChange={ (e) => {
                   setText(e.target.value);
                   isSoundEnabled && playRandomKeyStrokeSound();
+
+                  // auto-grow logic
+                  e.target.style.height = "auto";
+                  const maxHeight = 7 * 24; // 7 lines × line-height (~24px)
+                  e.target.style.height = Math.min(e.target.scrollHeight, maxHeight) + "px";
+                  e.target.style.overflowY =
+                  e.target.scrollHeight > maxHeight ? "auto" : "hidden";
               } }
-              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-3"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();  // prevents newline
+                  handleSendMessage(e); // call your send function
+                }
+              }}
+              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-md px-4 py-3"
               placeholder="Drop a message..."
+  
             />
 
             {/* IMAGE SELECTION FIELD */}
