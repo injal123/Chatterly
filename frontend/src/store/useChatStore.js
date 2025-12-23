@@ -174,4 +174,43 @@ export const useChatStore = create( (set, get) => ({
 
 
 
+    // The receiver’s frontend Socket.IO client listens for "newMessage" events emitted by the Socket.IO server from the sendMessage controller - Line 122.
+
+    listenForMessages: () => {
+        const { selectedUser, isSoundEnabled } = get();
+        if (!selectedUser) return;  // If theres no selectedUser, we dont see their chattingSide instead we see ChattingSideDefault, so to get ChattingSide we click on their div which renders Chatting Side via DB...so in this case, no real-time socket.io required.
+
+        const socket = useAuthStore.getState().socket; 
+
+        socket.on("newMessage", (newMessage) => {
+            // ‼️ ‼️
+            const isMsgSentFromSelectedUser = selectedUser._id === newMessage.senderId;
+            if (!isMsgSentFromSelectedUser) return; 
+
+            const currentMessages = get().messages;
+            set({ messages: [...currentMessages, newMessage] });
+
+            if (isSoundEnabled) {
+                const notificationSound =  new Audio("/sounds/notification.mp3");
+                notificationSound.currentTime = 0; // RESET TO START
+                notificationSound.play()
+                    .catch( (error) => console.log("Audio Play Failed:", error) );
+            }
+        } )
+    },
+
+
+
+    stopListeningForMessages: () => {
+        const socket = useAuthStore.getState().socket;
+
+        if (!socket) return;
+
+        socket.off("newMessage");  // A Socket.IO event.
+    },
+
+
+
+
+
 }) )

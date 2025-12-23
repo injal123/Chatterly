@@ -26,6 +26,17 @@ io.use(socketAuthMiddleware);
 
 
 
+// for sendMessage controller in message.controller.js Line 111.
+export function getReceiverSocketId(userId) {
+    return userSocketMap[userId];
+}
+// 1. User A sends a message → backend receives it via sendMessage controller,
+// 2. Backend saves it to DB (newMessage),
+// 3. Backend finds receiver’s socket ID with getReceiverSocketId,
+// 4. Backend emits "newMessage" event directly to receiver’s socket,
+// 5. User B’s frontend listens for "newMessage" → updates chat UI in real-time.
+
+
 
 // This is for storing online users - Initially empty.
 const userSocketMap = {};   // { userId: socketId }     - key:value format.

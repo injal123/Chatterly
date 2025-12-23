@@ -5,6 +5,12 @@ import User from "../models/User.js";
 import Message from "../models/Message.js";
 import cloudinary from '../lib/cloudinary.js';
 
+import { getReceiverSocketId, io } from "../lib/socket.js";
+
+
+
+
+
 
 export const getAllContacts = async (req, res) => {
     try {
@@ -85,7 +91,6 @@ export const sendMessage = async (req, res) => {
 //                  sender_5__1766169456900.jpg
 
 
-
         let imageUrl;
         if (image) {
             const conversationId = [senderId.toString(), receiverId.toString()].sort().join("_");
@@ -107,7 +112,24 @@ export const sendMessage = async (req, res) => {
 
         await newMessage.save();
 
-        // socket.io 
+
+        // Real-time message delivery via Socket.IO:
+        // 1. Check if the message receiver is currently online by looking up their socket ID.
+        // 2. If the receiver is online, emit a "newMessage" event directly to their socket.
+        // 3. This allows the receiver to see the message instantly without refreshing the page.
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage );
+        }
+
+        // OVERALL:
+        // 1. User A sends a message → backend receives it via sendMessage controller,
+        // 2. Backend saves it to DB,
+        // 3. Backend finds receiver’s socket ID with getReceiverSocketId,
+        // 4. Backend emits "newMessage" event directly to receiver’s socket,  <==
+        // 5. User B’s frontend listens for "newMessage" → updates chat UI in real-time.
+
+
 
         res.status(200).send(newMessage);
 
