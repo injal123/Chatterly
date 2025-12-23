@@ -11,8 +11,15 @@ import { ENV } from './lib/env.js';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
 
+import { app, server } from './lib/socket.js';
 
-const app = express(); 
+
+
+
+
+
+
+// const app = express();  // No need to create Express app here — using the one from socket.js
 const PORT = ENV.PORT || 3000;
 
 const __dirname = path.resolve();
@@ -26,7 +33,7 @@ app.use(cors({ origin: ENV.CLIENT_URL, credentials:true })); // allow frontend, 
 app.use(cookieParser());  // to parse cookies from request headers..to be used in auth.middleware.js
 
 // the default limit of express.json() is only 100kb. So we use limit option here bcz it said payload size too large.
-// Backend can receive JSON (including Base64 images) and URL-encoded data up to 5 MB.
+// Now, Backend can receive JSON (including Base64 images) and URL-encoded data up to 5 MB.
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ limit: "5mb", extended: true }));
 
@@ -64,7 +71,7 @@ app.use('*', (_, res) => {
 const startServer = async () => {
   try {
     await connectDB(); // wait for DB connection.
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {       // for socket real-time communication.
       console.log(`Server is running on Port: ${PORT}`);
     });
   } catch (error) {

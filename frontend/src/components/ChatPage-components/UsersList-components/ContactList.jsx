@@ -3,12 +3,14 @@ import { useChatStore } from "../../../store/useChatStore";
 import LoadingUsers from "./LoadingUsers";
 
 import { NoContacts } from './No-Contact-PartnerFound.jsx.jsx';
+import { useAuthStore } from '../../../store/useAuthStore.js';
 
 
 
 function ContactList() {
 
   const { getAllContacts, isLoadingUsers, allContacts, setSelectedUser } = useChatStore();
+  const { onlineUsers } = useAuthStore();
 
   // console.log(allContacts);
 
@@ -34,10 +36,10 @@ function ContactList() {
           hover:bg-slate-600 hover:text-slate-200 transition-colors'
           onClick={() => setSelectedUser(contact)}
         >
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3'> 
               {/* User Avatar */}
               {/* socket.io - STATUS */}
-              <div className={`avatar online`}>
+              <div className={`avatar ${ onlineUsers.includes(contact._id) ? "online" : "offline" }`}>
                   <div className='size-12 rounded-full'>
                       <img 
                         src={contact.profilePic || "avatar.png"} 

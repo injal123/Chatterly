@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useChatStore } from "../../../store/useChatStore"
 import { X } from 'lucide-react';
+import { useAuthStore } from "../../../store/useAuthStore";
 
 
 
 function ChatHeader() {
 
     const { selectedUser, setSelectedUser } = useChatStore();
+    const { onlineUsers } = useAuthStore();
 
 
     useEffect( () => {
@@ -33,7 +35,8 @@ function ChatHeader() {
         {/* LEFT-SIDE */}
         <div className="flex items-center space-x-3">
             {/* AVATAR */}
-            <div className={`avatar online hover:scale-110 transition-all duration-50 ease-out`}>
+            <div className={`avatar ${ onlineUsers.includes(selectedUser._id) ? "online" : "offline" }
+                hover:scale-110 transition-all duration-50 ease-out`}>
                 <div className="rounded-full h-12 w-12">
                     <img 
                         src={selectedUser.profilePic || "avatar.png"}
@@ -48,7 +51,8 @@ function ChatHeader() {
                   {selectedUser.fullName}
                 </h3>
 
-                <p className="text-slate-400 text-xs">Online</p>
+                {/* STATUS WITH socket.io */}
+                <p className="text-slate-400 text-xs">{ onlineUsers.includes(selectedUser._id) ? "Online" : "Offline" }</p>
             </div>
             
         </div>
