@@ -13,7 +13,7 @@ import LoadingMessages from "./ChattingSide-components/LoadingMessages";
 function ChattingSide() {
 
   // once selectedUser is set from sidebar, ChattingSide is rendered, then useEffect will call getMessagesByUserId function, fills messages array.
-  const { selectedUser, getMessagesByUserId, messages, isLoadingMessages } = useChatStore();
+  const { selectedUser, getMessagesByUserId, isLoadingMessages, messages, listenForMessages, stopListeningForMessages  } = useChatStore();
   const { authUserInfo } = useAuthStore();
   const messageEndRef = useRef(null);
 
@@ -22,7 +22,12 @@ function ChattingSide() {
 
   useEffect( () => {
       getMessagesByUserId(selectedUser._id);
-  }, [getMessagesByUserId, selectedUser] )   // when selectedUser changes, run this effect again.
+
+      listenForMessages();
+      // cleanup
+      return () => stopListeningForMessages();
+  }, 
+  [getMessagesByUserId, selectedUser, listenForMessages, stopListeningForMessages] )   // when selectedUser changes, run this effect again.
 
 
 
