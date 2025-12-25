@@ -187,8 +187,13 @@ export const useChatStore = create( (set, get) => ({
             const isMsgSentFromSelectedUser = selectedUser._id === newMessage.senderId;
             if (!isMsgSentFromSelectedUser) return; 
 
+            const newMessageWithShake = {
+                ...newMessage,
+                shouldShake: true
+            };
+
             const currentMessages = get().messages;
-            set({ messages: [...currentMessages, newMessage] });
+            set({ messages: [...currentMessages, newMessageWithShake] });
 
             if (isSoundEnabled) {
                 const notificationSound =  new Audio("/sounds/notification.mp3");
@@ -209,6 +214,46 @@ export const useChatStore = create( (set, get) => ({
         socket.off("newMessage");  // A Socket.IO event.
     },
 
+
+
+
+    isTyping: false,
+    typingTimer: null,
+
+    // SENDER TYPING ?
+    listenForTyping: () => {
+        const socket = useAuthStore.getState().socket;
+        if (!socket) return;
+        
+        socket.on("typing", ({senderId}) => {
+            const isMsgTypedFromSelectedUser = get().selectedUser._id === senderId
+            if (!isMsgTypedFromSelectedUser) return;
+
+            // Clear previous timer
+            clearTimeout(get().typingTimer);
+
+            // console.log("🔥isTyping set to TRUE");
+            set({ isTyping: true });
+
+
+            const timeout = setTimeout(() => {
+                set({ isTyping: false });
+            }, 1300);
+
+            set({ typingTimer: timeout });
+            
+        });
+
+    },
+
+
+
+    stopListeningForTyping: () => {
+        const socket = useAuthStore.getState().socket;
+        socket?.off("typing");
+        clearTimeout(get().typingTimer); // clear timer on cleanup
+        set({ isTyping: false, typingTimer: null });
+    },
 
 
 

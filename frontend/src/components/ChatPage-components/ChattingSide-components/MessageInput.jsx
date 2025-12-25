@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import useKeyboardSound from "../../../hooks/useKeyboardSound";
 import { useChatStore } from "../../../store/useChatStore";
 import toast from "react-hot-toast";
-import { X, Image, Send } from "lucide-react";
+import { X, Image, Send, Laugh } from "lucide-react";
+
+import EmojiPicker from 'emoji-picker-react';
+import { useAuthStore } from "../../../store/useAuthStore";
+
 
 
 
@@ -16,8 +20,12 @@ function MessageInput() {
     const [ imagePreview, setImagePreview ] = useState(null);
 
     const fileInputRef = useRef(null);
+    const inputRef = useRef(null);
 
-    const { isSoundEnabled, sendMessage } = useChatStore(); 
+    const { isSoundEnabled, sendMessage, selectedUser } = useChatStore(); 
+    const { socket } = useAuthStore();
+
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
 
 
@@ -73,6 +81,20 @@ function MessageInput() {
 
 
 
+    // To let receiver know if sender is Typing ?
+    const handleTyping = () => {
+      // console.log("Emitting typing to:", selectedUser._id);
+      
+      socket.emit("typing", { receiverId: selectedUser._id } );
+    };
+
+
+
+
+
+
+
+
   return (   // border-at-top
     <div className="border-t border-slate-700/50 p-5">
         
@@ -102,15 +124,20 @@ function MessageInput() {
         {/* FORM - submits after everything is selected as final */}
         <form 
           onSubmit={handleSendMessage}
-          className="max-w-3xl mx-auto space-x-4 flex"
+          className="max-w-3xl mx-auto space-x-4 flex relative"
         >
             {/* TEXT INPUT FIELD */}
             <textarea type="text"
             rows={1}
               value={text}
+              ref={inputRef}
               onChange={ (e) => {
                   setText(e.target.value);
                   isSoundEnabled && playRandomKeyStrokeSound();
+
+                  //socket.io - SENDER IS TYPING ?
+                  handleTyping();
+
 
                   // auto-grow logic
                   e.target.style.height = "auto";
@@ -129,6 +156,47 @@ function MessageInput() {
               placeholder="Drop a message..."
   
             />
+
+
+
+
+            {/* Emoji button */}
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className={`${ showEmojiPicker===true ? "text-sky-600 hover:text-sky-400" : "text-slate-400 hover:text-slate-200" }`}
+            >
+                <Laugh />
+            </button>
+
+            {/* Emoji picker */}
+            {/* https://www.npmjs.com/package/emoji-picker-react */}
+            {showEmojiPicker && (
+              <div className="absolute bottom-full right-0 z-50">
+
+                  <EmojiPicker
+                    className="-top-3"
+                    onEmojiClick={(emojiData) => {
+                      setText((prev) => prev + emojiData.emoji);
+                    }}
+                  />
+
+                  <button 
+                    className="absolute bg-sky-800 text-white rounded-full -top-5 -left-4 size-8 flex justify-center items-center"
+                     onClick={() => {
+                        setShowEmojiPicker(false);        // close emoji picker
+                        inputRef.current?.focus();        // focus input automatically
+                      }}
+                  > 
+                      <X /> 
+                  </button>
+
+              </div>
+            )}
+
+
+
+
 
             {/* IMAGE SELECTION FIELD */}
             <input type="file"

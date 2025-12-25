@@ -13,7 +13,8 @@ import LoadingMessages from "./ChattingSide-components/LoadingMessages";
 function ChattingSide() {
 
   // once selectedUser is set from sidebar, ChattingSide is rendered, then useEffect will call getMessagesByUserId function, fills messages array.
-  const { selectedUser, getMessagesByUserId, isLoadingMessages, messages, listenForMessages, stopListeningForMessages  } = useChatStore();
+  const { selectedUser, getMessagesByUserId, isLoadingMessages, messages, listenForMessages, stopListeningForMessages,
+  listenForTyping, stopListeningForTyping, isTyping } = useChatStore();
   const { authUserInfo } = useAuthStore();
   const messageEndRef = useRef(null);
 
@@ -35,11 +36,24 @@ function ChattingSide() {
       if (messageEndRef.current) {
           messageEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
-  }, [messages]);
+  }, [messages, isTyping]);
 
 
 
 
+
+  // To indicate SENDER IS TYPING ?
+  useEffect(() => {
+      listenForTyping();
+
+      return () => stopListeningForTyping();
+  }, [selectedUser, listenForTyping, stopListeningForTyping]);
+
+
+
+
+
+  
   return (
     <>
       <ChatHeader />
@@ -98,7 +112,8 @@ function ChattingSide() {
                               msg.senderId === authUserInfo._id
                                 ? "bg-sky-700 text-white chat-bubble-end" // sender
                                 : ""
-                            } 
+                            }
+                            ${msg.shouldShake ? "shake" : ""}
                           `}>
                                 {/* Image */}
                                 { msg.image && (
@@ -122,6 +137,7 @@ function ChattingSide() {
                                 </p>
 
                           </div>
+                          
 
                           {/* socket.io */}
                           {/* STATUS - sent/delivered */}
@@ -129,6 +145,31 @@ function ChattingSide() {
 
                     </div>
                 ) ) }
+
+
+
+                {/* Typing Indicator */} 
+                {isTyping && 
+                  
+                    <div className="chat chat-start items-center space-x-2">
+
+                        <div className="chat-image avatar">
+                          <div className="w-10 rounded-full">
+                            <img
+                              src={selectedUser.profilePic || "avatar.png"}
+                              alt={selectedUser.fullName || "FriendName"}
+                              onError={(e) => { e.currentTarget.src = "avatar.png"; }}
+                            />
+                          </div>
+                        </div>
+                    
+                        <span className="text-slate-500 text-sm">{selectedUser.fullName} is typing</span>
+                        <span className="loading loading-dots loading-md"></span>
+                    </div>
+                }
+
+
+                
 
 
                 {/* AUTO-SCROLLING TO BOTTOM */}

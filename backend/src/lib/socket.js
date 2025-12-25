@@ -54,6 +54,17 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap)); // "Everyone, heres the updated list."
 
 
+    // SENDER Typing ?
+    socket.on("typing", ({ receiverId }) => {
+        // console.log("Backend received a Typing to:", receiverId);
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            socket.to(receiverSocketId).emit("typing", { senderId: userId } );
+        }
+    } )
+
+
+
     // listen when user disconnects.
     // Btw, once we have socket connection, we can use socket.on()
     // with socket.on we listen for events from clients.
@@ -67,3 +78,8 @@ io.on("connection", (socket) => {
 
 
 export { app, server, io };  // now go ahead, import these on server.js
+
+
+
+
+// Only "connection" and "disconnect" are built-in, everything else like "getOnlineUsers" is custom.
