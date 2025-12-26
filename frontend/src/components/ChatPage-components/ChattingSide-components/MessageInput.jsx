@@ -172,7 +172,7 @@ function MessageInput() {
             {/* Emoji picker */}
             {/* https://www.npmjs.com/package/emoji-picker-react */}
             {showEmojiPicker && (
-              <div className="absolute bottom-full right-0 z-50">
+              <div className="absolute z-50">
 
                   <EmojiPicker
                     className="-top-3"

@@ -7,6 +7,8 @@ import NoChatHistory from "./ChattingSide-components/NoChatHistory";
 import MessageInput from "./ChattingSide-components/MessageInput";
 import LoadingMessages from "./ChattingSide-components/LoadingMessages";
 
+import { Check, CheckCheck } from 'lucide-react';
+
 
 
 
@@ -19,6 +21,40 @@ function ChattingSide() {
   const messageEndRef = useRef(null);
 
   // console.log(messages);
+
+  // Time
+  function formatMessageTime(time) {
+      const msgDate = new Date(time);
+      const now = new Date();
+
+      const isToday =
+        msgDate.getDate() === now.getDate() &&
+        msgDate.getMonth() === now.getMonth() &&
+        msgDate.getFullYear() === now.getFullYear();
+
+      const isYesterday =
+        msgDate.getDate() === now.getDate() - 1 &&
+        msgDate.getMonth() === now.getMonth() &&
+        msgDate.getFullYear() === now.getFullYear();
+
+      if (isToday) {
+        return msgDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      } else if (isYesterday) {
+        return `Yesterday, ${msgDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+      } else if ((now - msgDate) / (1000 * 60 * 60 * 24) < 7) {
+        return msgDate.toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" });
+      } else {
+        return msgDate.toLocaleString([], {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+  }
+
 
 
   useEffect( () => {
@@ -47,7 +83,29 @@ function ChattingSide() {
       listenForTyping();
 
       return () => stopListeningForTyping();
-  }, [selectedUser, listenForTyping, stopListeningForTyping]);
+  }, [listenForTyping, stopListeningForTyping]);
+
+
+
+  // MESSAGE STATUS - SENT/DELIVERED/SEEN
+  useEffect(() => {
+    const socket = useAuthStore.getState().socket;
+    const myId = useAuthStore.getState().authUserInfo._id;
+
+    if (!selectedUser || !socket) return;
+
+    // CHAT OPENED
+    socket.emit("chat_opened", {
+      senderId: selectedUser._id,
+      receiverId: myId,
+    });
+
+    // CHAT CLOSED (cleanup)
+    return () => {
+      socket.emit("chat_closed", { userId: myId });
+    };
+  }, [selectedUser]);
+
 
 
 
@@ -128,20 +186,47 @@ function ChattingSide() {
 
                                 {/* Time when msg was sent. */}
                                 <p className="text-xs opacity-50 mt-1 ml-1"> 
-                                    <time>
-                                        {new Date(msg.createdAt).toLocaleTimeString([], {
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                        })}
-                                    </time>
+                                    <time>{formatMessageTime(msg.createdAt)}</time>
                                 </p>
 
                           </div>
                           
 
                           {/* socket.io */}
-                          {/* STATUS - sent/delivered */}
-                          <div className="chat-footer opacity-50">Delivered</div>
+                          {/* STATUS - sent/delivered/seen */}
+                          <div className="chat-footer text-xs opacity-50">
+                            {msg.senderId === authUserInfo._id && (
+                              
+                              <div className="flex items-center space-x-1 text-xs">
+                                  {/* Sent */}
+                                  {msg.status === "sent" && (
+                                    <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-1">
+                                      <Check size={14} />
+                                      <span>Sent</span>
+                                    </div>
+                                  )}
+
+                                  {/* Delivered */}
+                                  {msg.status === "delivered" && (
+                                    <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-1">
+                                      <CheckCheck size={14} />
+                                      <span>Delivered</span>
+                                    </div>
+                                  )}
+
+                                  {/* Seen */}
+                                  {msg.status === "seen" && (
+                                    <div className="flex items-center gap-1 text-[11px] text-sky-500 mt-1">
+                                      <CheckCheck size={14} />
+                                      <span>Seen · {formatMessageTime(msg.seenAt)}</span>
+                                    </div>
+                                  )}
+
+                              </div>
+
+                              
+                            )}
+                          </div>
 
                     </div>
                 ) ) }
