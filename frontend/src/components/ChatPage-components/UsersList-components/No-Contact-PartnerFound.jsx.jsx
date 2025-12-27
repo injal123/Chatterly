@@ -12,16 +12,14 @@ export function NoChatPartnersFound() {
   const { setActiveTab } = useChatStore();
 
 
-  return (
-    <div className="flex flex-col items-center justify-center h-full text-center py-16 bg-slate-700 rounded-xl space-y-6">
+  return ( <>
+    <div className="hidden sm:flex flex-col items-center justify-center h-full text-center py-16 bg-slate-700 rounded-xl space-y-6">
         
-        {/* Animated gradient circle with icon */}
-        <div className="relative w-28 h-28 rounded-full bg-gradient-to-tr flex items-center justify-center animate-pulse">
-          {/* Glowing background */}
-          <div className="absolute inset-0 rounded-full blur-2xl bg-gradient-to-tr from-sky-300 to-sky-400  opacity-40 animate-animate-spin-slow"></div>
+        <div className="relative w-28 h-28 rounded-full flex items-center justify-center">
 
           {/* Icon inside */}
-          <MessageSquareOff className="w-16 h-16 text-cyan-400 relative z-10" />
+          <MessageSquareOff className="w-16 h-16 text-slate-200 relative z-10 animate-bounce" />
+          
         </div>
 
 
@@ -52,7 +50,26 @@ export function NoChatPartnersFound() {
         </button>
       
     </div>
-  );
+
+
+    {/* MINIMAL CONTENT - visible only on mobile */}
+    <div className="sm:hidden flex flex-col items-center justify-center h-[95%] text-center bg-slate-700 rounded-xl space-y-6">
+
+        {/* Icon */}
+        <MessageSquareOff className="w-10 h-10 text-slate-200 relative z-10 animate-bounce" />
+
+        <span>No Chats Found</span>
+        <button
+            onClick={() => setActiveTab("contacts")}
+            className="px-3 py-2 rounded-lg text-sm font-medium bg-cyan-950"
+        >
+            Find Contacts
+        </button>
+    </div>
+
+
+
+  </>);
 }
 
 
@@ -63,18 +80,33 @@ export function NoChatPartnersFound() {
 
 export const NoContacts = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center p-6 bg-slate-700 rounded-xl">
+  <>
 
-      <div className="mb-12">
-        <MessageSquareOff className="w-20 h-20 text-slate-400" />
-      </div>
 
-      <h3 className="text-slate-200 text-lg font-semibold mb-2">
-        No contacts yet
-      </h3>
-      <p className="text-slate-400 text-sm">
-        The contact list is empty. Start connecting as soon as next user joins!
-      </p>
+    <div className="hidden sm:flex flex-col items-center justify-center h-full text-center p-6 bg-slate-700 rounded-xl">
+
+        <div className="mb-12">
+          <MessageSquareOff className="w-20 h-20 text-slate-400" />
+        </div>
+
+        <h3 className="text-slate-200 text-lg font-semibold mb-2">
+          No contacts yet
+        </h3>
+        <p className="text-slate-400 text-sm">
+          The contact list is empty. Start connecting as soon as next user joins!
+        </p>
     </div>
-  );
+
+
+    {/* MINIMAL CONTENT - visible only on mobile */}
+    <div className="sm:hidden flex flex-col items-center justify-center h-[95%] text-center bg-slate-700 rounded-xl space-y-6">
+
+        {/* Icon */}
+        <MessageSquareOff className="w-10 h-10 text-slate-200 relative z-10 animate-bounce" />
+
+        <span>No Contacts Found</span>
+    </div>
+
+    
+  </>);
 };

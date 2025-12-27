@@ -13,6 +13,7 @@
     "@rive-app/react-canvas": "^4.24.0",
     "axios": "^1.13.2",
     "browser-image-compression": "^2.0.2",
+    "emoji-picker-react": "^4.16.1",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

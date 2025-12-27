@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import useKeyboardSound from "../../../hooks/useKeyboardSound";
 import { useChatStore } from "../../../store/useChatStore";
 import toast from "react-hot-toast";
-import { X, Image, Send } from "lucide-react";
+import { X, Image, Send, Laugh } from "lucide-react";
+
+import EmojiPicker from 'emoji-picker-react';
+import { useAuthStore } from "../../../store/useAuthStore";
+
 
 
 
@@ -16,8 +20,12 @@ function MessageInput() {
     const [ imagePreview, setImagePreview ] = useState(null);
 
     const fileInputRef = useRef(null);
+    const inputRef = useRef(null);
 
-    const { isSoundEnabled, sendMessage } = useChatStore(); 
+    const { isSoundEnabled, sendMessage, selectedUser } = useChatStore(); 
+    const { socket } = useAuthStore();
+
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
 
 
@@ -73,6 +81,20 @@ function MessageInput() {
 
 
 
+    // To let receiver know if sender is Typing ?
+    const handleTyping = () => {
+      // console.log("Emitting typing to:", selectedUser._id);
+      
+      socket.emit("typing", { receiverId: selectedUser._id } );
+    };
+
+
+
+
+
+
+
+
   return (   // border-at-top
     <div className="border-t border-slate-700/50 p-5">
         
@@ -102,15 +124,20 @@ function MessageInput() {
         {/* FORM - submits after everything is selected as final */}
         <form 
           onSubmit={handleSendMessage}
-          className="max-w-3xl mx-auto space-x-4 flex"
+          className="max-w-3xl mx-auto space-x-2 sm:space-x-4 flex relative"
         >
             {/* TEXT INPUT FIELD */}
             <textarea type="text"
             rows={1}
               value={text}
+              ref={inputRef}
               onChange={ (e) => {
                   setText(e.target.value);
                   isSoundEnabled && playRandomKeyStrokeSound();
+
+                  //socket.io - SENDER IS TYPING ?
+                  handleTyping();
+
 
                   // auto-grow logic
                   e.target.style.height = "auto";
@@ -125,10 +152,53 @@ function MessageInput() {
                   handleSendMessage(e); // call your send function
                 }
               }}
-              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-md px-4 py-3"
+              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-md px-2 sm:px-4 py-3"
               placeholder="Drop a message..."
   
             />
+
+
+
+
+            {/* Emoji button */}
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className={`${ showEmojiPicker===true ? "text-sky-600 hover:text-sky-400" : "text-slate-400 hover:text-slate-200" }`}
+            >
+                <Laugh />
+            </button>
+
+            {/* Emoji picker */}
+            {/* https://www.npmjs.com/package/emoji-picker-react */}
+            {showEmojiPicker && (
+              <div className="absolute bottom-full right-4 sm:right-8 z-50">
+
+                  <EmojiPicker
+                    className="-top-3"
+                    height={380}
+                    width={300}
+                    onEmojiClick={(emojiData) => {
+                      setText((prev) => prev + emojiData.emoji);
+                    }}
+                  />
+
+                  <button 
+                    className="absolute bg-sky-800 text-white rounded-full -top-5 -left-4 size-8 flex justify-center items-center"
+                     onClick={() => {
+                        setShowEmojiPicker(false);        // close emoji picker
+                        inputRef.current?.focus();        // focus input automatically
+                      }}
+                  > 
+                      <X /> 
+                  </button>
+
+              </div>
+            )}
+
+
+
+
 
             {/* IMAGE SELECTION FIELD */}
             <input type="file"
@@ -141,7 +211,7 @@ function MessageInput() {
             {/* IMAGE SELECTION WITH BUTTON */}
             <button type="button"
               onClick={ () => fileInputRef.current?.click() }
-              className={`px-4
+              className={`px-2 sm:px-4
                 transition-colors ${ imagePreview ? "text-sky-600 hover:text-sky-400" : "text-slate-400 hover:text-slate-200" }
                 `}
             >
@@ -152,7 +222,7 @@ function MessageInput() {
             {/* SEND BUTTON */}
             <button type="submit"
               disabled={ !text.trim() && !imagePreview }
-              className={`px-4 py-2 rounded-lg font-medium transition-colors
+              className={`px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors
                 ${text.trim() || imagePreview
                   ? "text-white hover:text-sky-500"
                   : "text-slate-400 cursor-not-allowed opacity-50"}

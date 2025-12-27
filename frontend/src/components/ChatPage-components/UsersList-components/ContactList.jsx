@@ -32,15 +32,15 @@ function ContactList() {
 
         <div 
           key={contact._id}
-          className='bg-slate-700/70  p-4 rounded-xl cursor-pointer 
+          className='bg-slate-700/70 p-3 sm:p-5 rounded-xl cursor-pointer 
           hover:bg-slate-600 hover:text-slate-200 transition-colors'
           onClick={() => setSelectedUser(contact)}
         >
-          <div className='flex items-center gap-3'> 
+          <div className='flex items-center gap-2 sm:gap-[9px] md:gap-3'> 
               {/* User Avatar */}
               {/* socket.io - STATUS */}
               <div className={`avatar ${ onlineUsers.includes(contact._id) ? "online" : "offline" }`}>
-                  <div className='size-12 rounded-full'>
+                  <div className='size-[35px] sm:size-[39px] md:size-12 rounded-full'>
                       <img 
                         src={contact.profilePic || "avatar.png"} 
                         alt={contact.fullName}
@@ -50,7 +50,7 @@ function ContactList() {
               </div>
 
               {/* User Info */}
-              <h4 className='font-medium truncate'>{contact.fullName}</h4>
+              <h4 className='font-medium truncate text-[12px] sm:text-[13px] md:text-[16px]'>{contact.fullName}</h4>
           </div>
 
         </div>
