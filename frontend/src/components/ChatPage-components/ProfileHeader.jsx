@@ -135,8 +135,8 @@ function ProfileHeader() {
               className="
                 menu menu-sm dropdown-content sm:dropdown-left 
                 bg-slate-800 text-slate-300
-                rounded-xl shadow-xl w-44 p-2
-                mt-6 left-16 sm:mt-8 sm:-m-32  md:mt-6
+                rounded-xl shadow-xl w-[155px] sm:w-36 md:w-[150px] p-2
+                mt-6 left-16 sm:mt-8 sm:-m-36  md:mt-6 md:mr-44
               "
               >
                 {/* PROFILE */}
