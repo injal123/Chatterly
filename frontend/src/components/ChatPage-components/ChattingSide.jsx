@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 
@@ -20,7 +20,10 @@ function ChattingSide() {
   const { authUserInfo } = useAuthStore();
   const messageEndRef = useRef(null);
 
+  const [modalImage, setModalImage] = useState(null); // tracks clicked image
   // console.log(messages);
+
+
 
   // Time
   function formatMessageTime(time) {
@@ -178,7 +181,9 @@ function ChattingSide() {
                                   <img 
                                     src={msg.image} 
                                     alt="Shared" 
-                                    className="rounded-lg h-48 object-cover" />
+                                    className="rounded-lg h-48 object-cover"
+                                    onClick={() => setModalImage(msg.image)} // open clicked img.
+                                  />
                                 )}
 
                                 {/* Text */}
@@ -270,6 +275,22 @@ function ChattingSide() {
         }
           
       </div>
+
+
+      {/* SHOW LARGE VIEW FOR CLICKED IMG */}
+      {modalImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+          onClick={() => setModalImage(null)} // click anywhere to close.
+        >
+          <img
+            src={modalImage}
+            alt="Full view"
+            className="max-w-full max-h-full rounded shadow-lg"
+          />
+        </div>
+      )}
+
 
 
 
