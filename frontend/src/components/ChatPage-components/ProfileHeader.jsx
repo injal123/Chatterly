@@ -3,7 +3,7 @@ import { useChatStore } from "../../store/useChatStore";
 
 import { useState, useRef } from "react";
 
-import { LogOut, Volume2, VolumeOff } from 'lucide-react';
+import { LogOut, Volume2, VolumeOff, Cog, UserRoundCog } from 'lucide-react';
 
 
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
@@ -66,7 +66,7 @@ function ProfileHeader() {
 
   return (
     <div className="px-2 py-4 sm:p-3 md:p-6 border-b border-slate-700/50  ">
-      <div className="flex justify-between items-center flex-col sm:flex-row gap-3">
+      <div className="sm:flex sm:justify-between sm:items-center flex-col sm:flex-row space-y-4 sm:gap-[1px] md:gap-3">
 
         {/* LEFT SIDE - AVATAR & USER INFO */}
         <div className="flex items-center gap-[4px] sm:gap-6px md:gap-3">
@@ -121,8 +121,80 @@ function ProfileHeader() {
 
 
 
-        {/* RIGHT SIDE - logout & Sound button */}
-        <div className="flex gap-4 items-center">
+        {/* RIGHT SIDE - Settings */}
+        <div
+          data-tip="Settings"
+          className="tooltip dropdown relative text-slate-400 hover:text-slate-200 flex justify-end">
+            <button tabIndex={0} className="btn btn-ghost btn-sm -mt-3 w-11">
+              <Cog />
+            </button>
+
+
+            <ul
+              tabIndex={0}
+              className="
+                menu menu-sm dropdown-content sm:dropdown-left 
+                bg-slate-800 text-slate-300
+                rounded-xl shadow-xl w-44 p-2
+                mt-6 left-16 sm:mt-8 sm:-m-32  md:mt-6
+              "
+              >
+                {/* PROFILE */}
+                <li>
+                  <button
+                    className="flex items-center gap-2 w-full px-2 py-2 rounded
+                              hover:bg-slate-700/60 transition"
+                  >
+                    <UserRoundCog className="size-5" />
+                    <span className="text-sm">Profile</span>
+                  </button>
+                </li>
+
+                {/* SOUND TOGGLE */}
+                <li>
+                  <button
+                    onClick={() => {
+                      mouseClickSound.currentTime = 0;
+                      mouseClickSound.play().catch(() => {});
+                      toggleSound();
+                    }}
+                    className="flex items-center gap-2 w-full px-2 py-2 rounded
+                              hover:bg-slate-700/60 transition"
+                  >
+                    {isSoundEnabled ? (
+                      <Volume2 className="size-5" />
+                    ) : (
+                      <VolumeOff className="size-5" />
+                    )}
+                    <span className="text-sm">
+                      {isSoundEnabled ? "Mute sound" : "Unmute sound"}
+                    </span>
+                  </button>
+                </li>
+
+                {/* DIVIDER */}
+                <li className="my-1 border-t border-slate-700/5" />
+
+                {/* LOG OUT */}
+                <li>
+                    <button
+                      onClick={logout}
+                      className="flex items-center gap-2 w-full px-2 py-2 rounded
+                                text-red-400 hover:text-red-300
+                                hover:bg-red-500/10 transition"
+                    >
+                      <LogOut className="size-5" />
+                      <span className="text-sm">Log out</span>
+                    </button>
+                </li>
+            </ul>
+
+
+        </div>
+
+
+
+        {/* <div className="flex items-center">
               <button 
                   data-tip="LogOut"
                   onClick={logout} className="tooltip text-slate-400 hover:text-slate-200" >
@@ -141,7 +213,7 @@ function ProfileHeader() {
                   } }>
                           { isSoundEnabled ? <Volume2 className="size-5" /> : <VolumeOff className="size-5" /> }
               </button>
-        </div>
+        </div> */}
 
         
       </div>     
