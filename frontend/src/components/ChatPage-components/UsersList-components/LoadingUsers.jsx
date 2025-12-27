@@ -5,7 +5,7 @@ function LoadingUsers() {
       {[1, 2, 3, 4].map((item) => (
           <div 
             key={item}
-            className="bg-slate-800/30 p-4 rounded-lg animate-pulse">
+            className="bg-slate-800/30 p-[17px] rounded-lg animate-pulse">
               <div className="flex items-center space-x-3">
                 {/* circle */}
                 <div className="w-12 h-12 bg-slate-700 rounded-full"></div>

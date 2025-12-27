@@ -65,16 +65,16 @@ function ProfileHeader() {
 
 
   return (
-    <div className="p-6 border-b border-slate-700/50  ">
-      <div className="flex justify-between items-center">
+    <div className="px-2 py-4 sm:p-3 md:p-6 border-b border-slate-700/50  ">
+      <div className="flex justify-between items-center flex-col sm:flex-row gap-3">
 
         {/* LEFT SIDE - AVATAR & USER INFO */}
-        <div className="flex gap-3 items-center">
+        <div className="flex items-center gap-[4px] sm:gap-6px md:gap-3">
   
             {/* AVATAR */}
-            <div className="avatar online ">      {/* bg-fuchsia-950 */}
+            <div className="avatar online">      {/* bg-fuchsia-950 */}
 
-                <button className="size-14 rounded-full overflow-hidden relative group"
+                <button className="size-[50px] sm:size-[53px] md:size-14 rounded-full overflow-hidden relative group"
                   disabled={isUpdatingProfile}
                   onClick={ () => fileInputRef.current.click() } >
 
@@ -110,11 +110,11 @@ function ProfileHeader() {
 
             {/* USER NAME & STATUS */}
             <div>
-                <h3 className="text-slate-300 font-medium text-base max-w-[140px] truncate">
+                <h3 className="text-slate-300 font-medium text-[18px] sm:text-base truncate">
                   {authUserInfo.fullName}
                 </h3>
 
-                <p className="text-slate-400 text-xs">Online</p>
+                <p className="text-slate-400 text-[11px] sm:text-xs">Online</p>
             </div>
 
         </div>

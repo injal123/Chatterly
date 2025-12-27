@@ -124,7 +124,7 @@ function MessageInput() {
         {/* FORM - submits after everything is selected as final */}
         <form 
           onSubmit={handleSendMessage}
-          className="max-w-3xl mx-auto space-x-4 flex relative"
+          className="max-w-3xl mx-auto space-x-2 sm:space-x-4 flex relative"
         >
             {/* TEXT INPUT FIELD */}
             <textarea type="text"
@@ -152,7 +152,7 @@ function MessageInput() {
                   handleSendMessage(e); // call your send function
                 }
               }}
-              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-md px-4 py-3"
+              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-md px-2 sm:px-4 py-3"
               placeholder="Drop a message..."
   
             />
@@ -172,10 +172,12 @@ function MessageInput() {
             {/* Emoji picker */}
             {/* https://www.npmjs.com/package/emoji-picker-react */}
             {showEmojiPicker && (
-              <div className="absolute z-50">
+              <div className="absolute bottom-full right-4 sm:right-8 z-50">
 
                   <EmojiPicker
                     className="-top-3"
+                    height={380}
+                    width={300}
                     onEmojiClick={(emojiData) => {
                       setText((prev) => prev + emojiData.emoji);
                     }}
@@ -209,7 +211,7 @@ function MessageInput() {
             {/* IMAGE SELECTION WITH BUTTON */}
             <button type="button"
               onClick={ () => fileInputRef.current?.click() }
-              className={`px-4
+              className={`px-2 sm:px-4
                 transition-colors ${ imagePreview ? "text-sky-600 hover:text-sky-400" : "text-slate-400 hover:text-slate-200" }
                 `}
             >
@@ -220,7 +222,7 @@ function MessageInput() {
             {/* SEND BUTTON */}
             <button type="submit"
               disabled={ !text.trim() && !imagePreview }
-              className={`px-4 py-2 rounded-lg font-medium transition-colors
+              className={`px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors
                 ${text.trim() || imagePreview
                   ? "text-white hover:text-sky-500"
                   : "text-slate-400 cursor-not-allowed opacity-50"}
