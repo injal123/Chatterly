@@ -12,6 +12,9 @@ import { toast } from "react-hot-toast";
 
 import imageCompression from "browser-image-compression";
 
+import { useNavigate } from 'react-router';
+
+
 
 
 
@@ -62,6 +65,7 @@ function ProfileHeader() {
 // // console.log(authUserInfo.fullName);
 // console.log(authUserInfo.user.fullName);
 
+const navigate = useNavigate();
 
 
   return (
@@ -142,6 +146,7 @@ function ProfileHeader() {
                 {/* PROFILE */}
                 <li>
                   <button
+                    onClick={() => navigate("/profile") }
                     className="flex items-center gap-2 w-full px-2 py-2 rounded
                               hover:bg-slate-700/60 transition"
                   >
