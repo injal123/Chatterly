@@ -180,12 +180,3 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
-
-function InfoItem({ label, value }) {
-  return (
-    <div className="bg-slate-800/50 rounded-lg px-4 py-3">
-      <p className="text-xs text-slate-400">{label}</p>
-      <p className="text-sm mt-1">{value}</p>
-    </div>
-  );
-}
