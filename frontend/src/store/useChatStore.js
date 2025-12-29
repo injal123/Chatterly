@@ -119,8 +119,6 @@ export const useChatStore = create( (set, get) => ({
 
 
 
-
-
         // 2..... MOCKING res - FOR BOTH IMAGE & TEXT...to temporarily append "the msg user just sent" to "messages" array. This makes new image & text appear in the UI faster...before even getting res from server which permanently appends "messages" array with the user msg received from server.
         const { authUserInfo } = useAuthStore.getState();
 
@@ -128,18 +126,19 @@ export const useChatStore = create( (set, get) => ({
 
         const tempId = `temp-${Date.now()}`  // fake msg-Id mock.
 
-        const optimisticMessage = {
+        const tempMsg = {
             _id: tempId,
             senderId: authUserInfo._id,
             receiverId: selectedUser._id,
             text: messageData.text,
             image: messageData.image,
             createdAt: new Date().toISOString(),
+            status: "sent",
             isOptimistic: true,  // flag to identify optimistic messages (optional).
         };
 
-        set({ messages: [...messages, optimisticMessage] })  // 3..... get all messages, append optimisticMessage in it.
-        // sets messages= [m1, m2, optimisticMessage]...Temporarily, updates UI with this fake list, which neither gets stored nor gets fetched from server.
+        set({ messages: [...messages, tempMsg] })  // 3..... get all messages, append tempMsg in it.
+        // sets messages= [m1, m2, tempMsg]...Temporarily, updates UI with this fake list, which neither gets stored nor gets fetched from server.
 
 
 
@@ -158,7 +157,13 @@ export const useChatStore = create( (set, get) => ({
             );
             // 4.... In here, messages: [m1, m2] still like this.
 
-            set({ messages: messages.concat(res.data) });   // NOW, messages: [m1, m2, realMsg]...then updates UI with this list. This overwrites the fake list, also being permanent.
+            set({
+                messages: messages
+                .filter(msg => !msg.isOptimistic) //if isOptimistic =false, they're made true and kept in msg.
+                .concat(res.data) // Replace tempMsg with real message.
+            });  
+            
+            // NOW, messages: [m1, m2, realMsg]...then updates UI with this list. This overwrites the fake list, also being permanent.
 
             // 5.... FACT: when new msg appends, all existing msg are placed again in divs cz of 
             // messages.map().
@@ -180,7 +185,7 @@ export const useChatStore = create( (set, get) => ({
         const { selectedUser, isSoundEnabled } = get();
         if (!selectedUser) return;  // If theres no selectedUser, we dont see their chattingSide instead we see ChattingSideDefault, so to get ChattingSide we click on their div which renders Chatting Side via DB...so in this case, no real-time socket.io required.
 
-        const socket = useAuthStore.getState().socket; 
+        const socket = useAuthStore.getState().socket;
 
         socket.on("newMessage", (newMessage) => {
             // ‼️ ‼️
@@ -188,7 +193,7 @@ export const useChatStore = create( (set, get) => ({
             if (!isMsgSentFromSelectedUser) return; 
 
             const currentMessages = get().messages;
-            set({ messages: [...currentMessages, newMessage] });
+            set({ messages: [...currentMessages, { ...newMessage, shouldShake: true } ] });
 
             if (isSoundEnabled) {
                 const notificationSound =  new Audio("/sounds/notification.mp3");
@@ -196,7 +201,34 @@ export const useChatStore = create( (set, get) => ({
                 notificationSound.play()
                     .catch( (error) => console.log("Audio Play Failed:", error) );
             }
+
         } )
+
+        // SENT → DELIVERED
+        socket.on("message_status", ({ messageId, status }) => {
+            set((state) => ({
+                messages: state.messages.map((m) =>
+                m._id === messageId ? { ...m, status } : m
+                ),
+            }));
+
+        });
+
+         // DELIVERED → SEEN
+        socket.on("messages_seen", ({ receiverId }) => {
+        const myId = useAuthStore.getState().authUserInfo._id;
+
+        set((state) => ({
+            messages: state.messages.map((m) =>
+            m.senderId === myId && m.receiverId === receiverId
+                ? { ...m, status: "seen", seenAt: new Date().toISOString() }
+                : m
+            ),
+        }));
+        });
+
+
+
     },
 
 
@@ -207,7 +239,51 @@ export const useChatStore = create( (set, get) => ({
         if (!socket) return;
 
         socket.off("newMessage");  // A Socket.IO event.
+        socket?.off("message_status");
+        socket?.off("messages_seen");
     },
+
+
+
+
+    isTyping: false,
+    typingTimer: null,
+
+    // SENDER TYPING ?
+    listenForTyping: () => {
+        const socket = useAuthStore.getState().socket;
+        if (!socket) return;
+        
+        socket.on("typing", ({senderId}) => {
+            const isMsgTypingFromSelectedUser = get().selectedUser._id === senderId
+            if (!isMsgTypingFromSelectedUser) return;
+
+            // Clear previous timer
+            clearTimeout(get().typingTimer);
+
+            // console.log("🔥isTyping set to TRUE");
+            set({ isTyping: true });
+
+
+            const timeout = setTimeout(() => {
+                set({ isTyping: false });
+            }, 1300);
+
+            set({ typingTimer: timeout });
+            
+        });
+
+    },
+
+
+
+    stopListeningForTyping: () => {
+        const socket = useAuthStore.getState().socket;
+        socket?.off("typing");
+        clearTimeout(get().typingTimer); // clear timer on cleanup
+        set({ isTyping: false, typingTimer: null });
+    },
+
 
 
 

@@ -43,7 +43,7 @@ export function createWelcomeEmailTemplate(name, clientURL) {
           <li style="margin-bottom: 10px;">Set up your profile picture</li>
           <li style="margin-bottom: 10px;">Find and add your contacts</li>
           <li style="margin-bottom: 10px;">Start a conversation</li>
-          <li style="margin-bottom: 0;">Share photos, videos, and more</li>
+          <li style="margin-bottom: 0;">Share photos</li>
         </ul>
       </div>
       
@@ -56,15 +56,7 @@ export function createWelcomeEmailTemplate(name, clientURL) {
       
       <p style="margin-top: 25px; margin-bottom: 0;">Best regards,<br>The Chatterly Team</p>
     </div>
-    
-    <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-      <p>© 2025 Chatterly. All rights reserved.</p>
-      <p>
-        <a href="#" style="color: #5B86E5; text-decoration: none; margin: 0 10px;">Privacy Policy</a>
-        <a href="#" style="color: #5B86E5; text-decoration: none; margin: 0 10px;">Terms of Service</a>
-        <a href="#" style="color: #5B86E5; text-decoration: none; margin: 0 10px;">Contact Us</a>
-      </p>
-    </div>
+
   </body>
   </html>
   `;

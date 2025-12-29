@@ -6,6 +6,8 @@ import { Routes, Route, Navigate } from 'react-router';
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import ProfilePage from './pages/ProfilePage';
+
 
 import { useAuthStore } from './store/useAuthStore';
 import { useEffect } from 'react';
@@ -52,6 +54,7 @@ function App() {
           <Route path="/" element={ authUserInfo ? <ChatPage /> : <Navigate to={"/login"} /> } />
           <Route path="/login" element={ !authUserInfo ? <LoginPage /> : <Navigate to="/" /> } />
           <Route path="/signup" element={ !authUserInfo ? <SignUpPage /> : <Navigate to="/" /> } />
+          <Route path="/profile" element={ authUserInfo ? <ProfilePage /> : <Navigate to={"/login"} /> } />
         </Routes>
 
         <Toaster />

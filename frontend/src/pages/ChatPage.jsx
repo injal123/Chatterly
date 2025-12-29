@@ -20,23 +20,24 @@ function ChatPage() {
 
 
   return (
-    <div className='relative h-[800px] w-full max-w-6xl '>
+    <div className='relative h-[700px] w-full max-w-5xl '>
         <AnimatedBorderContainer>
             {/* LEFT SIDE */}
-            <div className='w-80 bg-slate-800/50 flex flex-col backdrop-blur-sm'>
+            <div className={`w-[170px] sm:w-[195px] md:w-[300px] bg-slate-800/50 flex flex-col backdrop-blur-sm ${selectedUser ? "hidden sm:flex" : "flex" } `} >
                   <ProfileHeader />
                   <TabSwitch />
                   {/* <SearchBar /> */}
                   
                   {/* Take all remaining space inside a flex container, vertical scrollbar,..,.. */}
-                  <div className='flex-1 overflow-y-auto p-4 space-y-2 '>
+                  <div className='flex-1 overflow-y-auto p-3 md:p-4 space-y-2 '>
                       { activeTab === "chats" ? <ChatPartnerList /> : <ContactList /> }
                   </div>
             </div>
 
 
+
             {/* RIGHT SIDE */}
-            <div className='flex-1 bg-slate-900/50 flex flex-col '>
+            <div className='flex-1 bg-slate-900/50 flex flex-col w-full'>
                   { selectedUser ? <ChattingSide /> : <ChattingSideDefault /> }
             </div>
 
