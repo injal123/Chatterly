@@ -63,7 +63,8 @@ export const signup = async (req, res) => {
                 _id: savedUser._id,
                 email: savedUser.email,
                 fullName: savedUser.fullName,
-                profilePic: savedUser.profilePic
+                profilePic: savedUser.profilePic,
+                createdAt: user.createdAt,
              });
 
             
@@ -134,6 +135,7 @@ export const login = async (req, res) => {
             email: user.email,
             fullName: user.fullName,
             profilePic: user.profilePic,
+            createdAt: user.createdAt,
             message: "Login Successful"
         });
         

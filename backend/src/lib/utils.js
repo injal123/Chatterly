@@ -12,7 +12,7 @@ export const generateToken = (userId, res) => {
     const token = jwt.sign(
         {userId: userId},
         JWT_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '7d' }
     );
 
     res.cookie('jwt', token, {

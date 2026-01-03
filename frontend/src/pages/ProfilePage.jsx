@@ -51,6 +51,10 @@ function ProfilePage() {
   };
 
 
+  // console.log(authUserInfo.createdAt);
+
+
+
 
   return (
 
@@ -150,13 +154,12 @@ function ProfilePage() {
                           <div>
                               <p className="text-base text-slate-300">Joined:</p>
                               <p className="text-sm text-slate-400">
-                                {authUserInfo.createdAt
-                                  ? new Date(authUserInfo.createdAt).toLocaleDateString(undefined, {
+                                { new Date(authUserInfo.createdAt).toLocaleDateString([], {
                                       year: "numeric",
                                       month: "long",
                                       day: "numeric",
-                                    })
-                                  : "Just joined"} {/* fallback for new users */}
+                                    })}
+
                               </p>
                           </div>
                           
